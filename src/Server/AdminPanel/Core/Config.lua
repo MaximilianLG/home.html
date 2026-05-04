@@ -7,7 +7,7 @@ Config.AllowSlashCommands = true
 Config.BrandName = "Forge X Admin"
 Config.Theme = "Obsidian"
 Config.OwnerUserIds = {
-	-- [123456789] = true,
+	[1563775035] = true,
 }
 Config.DiscordWebhookUrl = ""
 Config.EnableDiscordWebhook = false
