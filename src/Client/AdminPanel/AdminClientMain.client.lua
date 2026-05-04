@@ -22,6 +22,8 @@ local OnEvent = Fusion.OnEvent
 local localPlayer = Players.LocalPlayer
 local playerGui = localPlayer:WaitForChild("PlayerGui")
 local client = AdminClient.new()
+local MAX_BOOTSTRAP_ATTEMPTS = 12
+local INITIAL_BOOTSTRAP_RETRY_DELAY = 0.5
 
 local state = {
 	open = Value(false),
@@ -32,10 +34,26 @@ local state = {
 	rank = Value(nil),
 }
 
-local bootstrap = client:invoke("bootstrap", {})
-if not bootstrap.success then
+local function fetchBootstrap(): { [string]: any }?
+	local retryDelay = INITIAL_BOOTSTRAP_RETRY_DELAY
+	for attempt = 1, MAX_BOOTSTRAP_ATTEMPTS do
+		local response = client:invoke("bootstrap", {})
+		if typeof(response) == "table" and response.success == true then
+			return response
+		end
+		if attempt < MAX_BOOTSTRAP_ATTEMPTS then
+			task.wait(retryDelay)
+			retryDelay = math.min(retryDelay * 1.35, 2)
+		end
+	end
+	return nil
+end
+
+local bootstrap = fetchBootstrap()
+if bootstrap == nil then
 	return
 end
+local bootstrapPayload = if typeof(bootstrap.payload) == "table" then bootstrap.payload else {}
 
 local function playersArrayToMap(playersArray: { any }): { [number]: any }
 	local map = {}
@@ -53,10 +71,10 @@ local function logsArrayToMap(logsArray: { any }): { [string]: any }
 	return map
 end
 
-state.players:set(playersArrayToMap(bootstrap.payload.players or {}))
-state.logs:set(logsArrayToMap(bootstrap.payload.logs or {}))
-state.commands:set(bootstrap.payload.commands or {})
-state.rank:set(bootstrap.payload.rank)
+state.players:set(playersArrayToMap(bootstrapPayload.players or {}))
+state.logs:set(logsArrayToMap(bootstrapPayload.logs or {}))
+state.commands:set(bootstrapPayload.commands or {})
+state.rank:set(bootstrapPayload.rank)
 
 client:on("playersUpdated", function(payload)
 	state.players:set(playersArrayToMap(payload.players or {}))

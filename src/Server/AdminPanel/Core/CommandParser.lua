@@ -128,7 +128,8 @@ function CommandParser.resolveArgument(
 		return true, { player }, "OK"
 	elseif definition.kind == "duration" then
 		local duration = Util.parseDuration(raw)
-		if duration == nil and string.lower(raw) ~= "perm" and string.lower(raw) ~= "permanent" then
+		local lower = string.lower(raw)
+		if duration == nil and lower ~= "perm" and lower ~= "permanent" and lower ~= "forever" then
 			return false, nil, `{definition.name} must be a duration like 10m, 2h, 7d, or permanent`
 		end
 		return true, duration, "OK"
