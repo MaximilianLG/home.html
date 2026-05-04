@@ -1,0 +1,30 @@
+{
+  "name": "ForgeXAdmin",
+  "tree": {
+    "$className": "DataModel",
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+      "AdminPanel": {
+        "$path": "src/Server/AdminPanel"
+      }
+    },
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+      "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
+        "AdminPanel": {
+          "$path": "src/Client/AdminPanel"
+        }
+      }
+    },
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "Packages": {
+        "$path": "Packages"
+      },
+      "AdminPanel": {
+        "$path": "src/Shared/AdminPanel"
+      }
+    }
+  }
+}

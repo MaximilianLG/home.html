@@ -1,0 +1,12 @@
+[package]
+name = "forgex/admin-panel"
+version = "1.0.0"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+
+[dependencies]
+Fusion = "elttob/fusion@0.3.0"
+
+[server-dependencies]
+
+[dev-dependencies]
